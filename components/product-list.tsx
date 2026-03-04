@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PenLine } from "lucide-react";
-import DeleteProductButton from "./clients/delete-button";
-import { Button } from "./ui/button";
-import RestoreProductButton from "./clients/restore-button";
+import DeleteProductButton from "./clients/buttons/delete-button";
+import RestoreProductButton from "./clients/buttons/restore-button";
+import AddButton from "./clients/buttons/add-button";
 
 interface Props {
   products: {
@@ -14,15 +14,10 @@ interface Props {
     price: number;
     description?: string | null;
   }[];
-  categories?: {
-    id: string
-    name: string
-  }[]
-
-  mode: "order" | "user" | "catalog" | "deleted";
+  mode: "order" | "user"  | "deleted";
 }
 
-export default function ProductList({ products,categories= [], mode }: Props) {
+export default function ProductList({ products, mode}: Props) {
   return (
     <div className="p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 auto-rows-fr justify-items-center md:place-items-center mt-4">
       {products.map((item) => (
@@ -60,16 +55,13 @@ export default function ProductList({ products,categories= [], mode }: Props) {
             </div>
           )}
           {mode === "order" && (
-            <div className="flex items-center justify-center">
-              <Button variant={"secondary"}>Order</Button>
-            </div>
+            <AddButton product={item} />
           )}
           {mode === "deleted" && (
             <div className="flex justify-center">
               <RestoreProductButton id={item.id} />
             </div>
           )}
-          {mode === "catalog" && null}
         </div>
       ))}
     </div>

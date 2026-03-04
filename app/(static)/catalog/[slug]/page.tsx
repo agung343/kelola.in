@@ -2,8 +2,10 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import ProductList from "@/components/product-list";
 import CatalogFilter from "@/components/clients/catalog-filter";
-import BackToTop from "@/components/clients/back-to-top";
+import BackToTop from "@/components/clients/buttons/back-to-top";
+import CartButton from "@/components/clients/buttons/cart-button";
 import { Prisma } from "@/app/generated/prisma/client";
+import OrderForm from "@/components/clients/order-form";
 
 export default async function CatalogPage({
   params,
@@ -63,8 +65,10 @@ export default async function CatalogPage({
         {business.name} catalog:
       </h1>
       <CatalogFilter slug={slug} categories={categories} />
-      <ProductList products={products} mode="catalog" />
+      <ProductList products={products} mode="order" />
+      <CartButton />
       <BackToTop />
+      <OrderForm slug={slug} />
     </main>
   );
 }

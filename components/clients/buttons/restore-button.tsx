@@ -1,6 +1,6 @@
 "use client";
 import { RestoreProduct } from "@/servers/product-action";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { RotateCcw } from "lucide-react";
 
 export default function RestoreProductButton({ id }: { id: string }) {

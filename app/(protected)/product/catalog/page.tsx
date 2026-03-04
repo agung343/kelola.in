@@ -1,11 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import ProductList from "@/components/product-list";
 import { useGetSession } from "@/lib/useGetSession";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { PenLine } from "lucide-react";
-import DeleteProductButton from "@/components/clients/delete-button";
+import CopyLinkButton from "@/components/clients/buttons/copy-link";
 
 export default async function BusinessProductCatalog() {
   const session = await useGetSession();
@@ -49,14 +48,14 @@ export default async function BusinessProductCatalog() {
             + Tambah Produk
           </Link>
           <Link
-            href={`/product/archieve`}
+            href={`/product/catalog/archieve`}
             className="bg-red-400 text-neutral-100 py-1.5 px-2 md:py-2 md:px-4 rounded-md text-sm md:text-lg font-medium active:bg-red-500"
           >
             Lihat Arsip
           </Link>
+          <CopyLinkButton slug={business.slug} />
         </div>
       </div>
-
       <ProductList mode="user" products={products} />
     </main>
   );

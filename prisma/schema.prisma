@@ -93,6 +93,7 @@ model Business {
 
   products Product[]
   categories Category[]
+  orders Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -117,6 +118,8 @@ model Product {
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  orderItems OrderItem[]
+
   @@index([businessId, id])
   @@index([userId, slug])
   @@unique([businessId, name])
@@ -137,4 +140,41 @@ model Category {
   @@unique([businessId, name])
   @@index([businessId])
   @@map("category")
+}
+
+model Order {
+  id String @id @default(cuid())
+  customerName String
+  customerPhone String
+  customerAddress String?
+  bookingDate DateTime?
+  notes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+  totalAmount Int
+  
+  businessId String
+  business Business @relation(fields: [businessId], references: [id])
+
+  items OrderItem[]
+
+  @@index([businessId, createdAt])
+  @@map("order")
+}
+
+model OrderItem {
+  id String @id @default(cuid())
+  quantity Decimal @db.Decimal(10,2)
+  price Int
+  subTotal Int
+  createdAt DateTime @default(now())
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  orderId String
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@map("order-item")
 }

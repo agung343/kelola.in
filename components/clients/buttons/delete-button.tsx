@@ -1,6 +1,6 @@
 "use client";
 import { DeleteProduct } from "@/servers/product-action";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { Trash2 } from "lucide-react";
 
 export default function DeleteProductButton({ id }: { id: string }) {
