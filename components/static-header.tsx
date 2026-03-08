@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
@@ -7,11 +8,13 @@ import { Drawer, DrawerContent, DrawerTrigger, DrawerTitle } from "./ui/drawer";
 import { GripVertical } from "lucide-react";
 
 export default function Header() {
+  const [open, setOpen] = useState(false)
+  const pageTitle = usePageTitle()
   return (
-    <header className="h-12 md:h-20 p-4 bg-neutral-100 text-neutral-800 rounded-b-md">
+    <header className="h-12 md:h-20 p-4 bg-neutral-100 text-neutral-800 rounded-b-md sticky top-0 z-50">
       <div className="flex items-center justify-between">
-        <div className="md:hidden">
-          <Drawer direction="left">
+        <div className="md:hidden flex items-center gap-2">
+          <Drawer direction="left" open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
               <GripVertical />
             </DrawerTrigger>
@@ -21,12 +24,13 @@ export default function Header() {
               </DrawerTitle>
               <hr className="my-2" />
               <div className="flex flex-col gap-4">
-                <Navigation />
+                <Navigation onCloseDrawer={() => setOpen(false)} />
                 <hr className="my-2" />
                 <AuthNav />
               </div>
             </DrawerContent>
           </Drawer>
+          <h2 className="text-xl font-semibold text-blue-800/70">{pageTitle}</h2>
         </div>
         <h2 className="md:hidden text-2xl font-bold text-blue-800/70">
           Kelola.in
@@ -41,7 +45,7 @@ export default function Header() {
   );
 }
 
-function Navigation() {
+function Navigation({onCloseDrawer} : {onCloseDrawer?: () => void}) {
   const pathname = usePathname();
 
   return (
@@ -50,6 +54,7 @@ function Navigation() {
         <Link
           href={"/"}
           className={pathname === "/" ? "underline font-bold" : undefined}
+          onClick={onCloseDrawer}
         >
           Home
         </Link>
@@ -58,6 +63,7 @@ function Navigation() {
           className={
             pathname === "/layanan" ? "underline font-bold" : undefined
           }
+          onClick={onCloseDrawer}
         >
           Layanan
         </Link>
@@ -66,6 +72,7 @@ function Navigation() {
           className={
             pathname === "/pricing" ? "underline font-bold" : undefined
           }
+          onClick={onCloseDrawer}
         >
           Pricing
         </Link>
@@ -111,4 +118,15 @@ function AuthNav() {
       )}
     </div>
   );
+}
+
+function usePageTitle() {
+  const pathname = usePathname()
+
+  if (pathname === "/") return "Home"
+  if (pathname === "/layanan") return "Layanan"
+  if (pathname === "/pricing") return "Harga"
+  if (pathname.startsWith("/catalog")) return "Katalog"
+
+  return ""
 }

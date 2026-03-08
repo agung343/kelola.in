@@ -11,6 +11,7 @@ import {
 } from "../ui/dialog";
 import { useCartStore } from "@/store/cart-context";
 import { CreateNewOrder, type OrderState } from "@/servers/order-action";
+import { ShoppingCart } from "lucide-react";
 
 const initialState: OrderState = {
   success: false,
@@ -27,22 +28,22 @@ export default function OrderForm({ slug }: { slug: string }) {
 
   useEffect(() => {
     if (state.success && state.waUrl) {
-      clearCart()
-      document.querySelector("form")?.reset()
-      window.location.href = state.waUrl
+      clearCart();
+      document.querySelector("form")?.reset();
+      window.location.href = state.waUrl;
     }
-  }, [state.success, state.waUrl, clearCart])
+  }, [state.success, state.waUrl, clearCart]);
 
   const totalAmount = getTotal();
 
   return (
     <Dialog>
-      <DialogTrigger className="fixed bottom-20 left-6 md:hidden bg-neutral-300/90 backdrop-blur-md p-2 rounded-full shadow-xl">
-        Order!
+      <DialogTrigger className="fixed bottom-20 left-6 bg-red-500 md:hidden backdrop-blur-md p-2 rounded-full shadow-xl">
+        <ShoppingCart size={20} />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Form Pemesanan</DialogTitle>
+          <DialogTitle>Checkout</DialogTitle>
         </DialogHeader>
         <form action={formAction} className="text-sm space-y-2">
           <div className="flex flex-col md:flex-row md:items-center justify-between">
@@ -126,7 +127,9 @@ export default function OrderForm({ slug }: { slug: string }) {
                   <span className="font-medium">{item.name}</span> X{" "}
                   {item.quantity}
                 </p>
-                <p className="font-semibold">Rp. {item.quantity * item.price}</p>
+                <p className="font-semibold">
+                  Rp. {item.quantity * item.price}
+                </p>
               </div>
             ))}
           </div>
@@ -152,8 +155,16 @@ export default function OrderForm({ slug }: { slug: string }) {
             >
               {isPending ? "Memesan" : "Pesan"}
             </button>
-            {!state.success && <p className="text-sm text-red-500 font-semibold text-center">{state.message}</p>}
-            {state.success && <p className="text-sm font-green-500 font-semibold text-center">{state.message}</p>}
+            {!state.success && (
+              <p className="text-sm text-red-500 font-semibold text-center">
+                {state.message}
+              </p>
+            )}
+            {state.success && (
+              <p className="text-sm font-green-500 font-semibold text-center">
+                {state.message}
+              </p>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>

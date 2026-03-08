@@ -21,60 +21,72 @@ export default async function UserProfile({
   const notCompleted = !business || !business.isOnBoarding;
   return (
     <div className="md:w-full p-8">
+      <h1 className="text-2xl font-semibold text-neutral-800/70 text-center">
+        Profil Usaha
+      </h1>
       {notCompleted && (
-        <div className="text-red-600 border-2 w-lg border-red-500 text-sm font-medium p-1.5">
-          <p className="text-center">
-            Click{" "}
-            <Link
-              href={`/profile/${user!.id}/edit`}
-              className="text-blue-500 hover:underline"
-            >
-              here{" "}
-            </Link>
-            to Update Your Business Profile, unlock productivity booster!
+        <div className="text-red-600 border-2 md:w-lg border-red-500 text-sm font-medium p-1.5 rounded-xl my-2 md:my-4">
+          <p className="md:text-center text-xs font-extralight text-wrap">
+            Kamu belum menyimpan profil usaha, segera update profil usaha biar
+            bisa buat katalog produk dan tracking histori pesanan
           </p>
         </div>
       )}
-      <div className="space-y-4">
-        <h1 className="text-2xl font-semibold">
-          Profil Usaha
-        </h1>
-        <p className="text-lg">
-          Name:{" "}
-          <span className="font-semibold">
-            {business?.name ?? "Kamu belum simpan nama usaha"}
-          </span>
-        </p>
-        <p className="text-lg">
-          Nomer Whatsapp:{" "}
-          <span className="font-semibold">
-            {business?.whatsAppNumber ?? "Nomer Whatsapp belum disimpan"}
-          </span>
-        </p>
-        <p className="text-lg">
-          Instagram:{" "}
-          <span className="font-semibold">
-            {business?.instagramAccount ?? null}
-          </span>
-        </p>
-        <p className="text-lg">
-          Tiktok:{" "}
-          <span className="font-semibold">
-            {business?.tiktokAccount ?? null}
-          </span>
-        </p>
-        <p className="text-lg">
-          Tentang Usaha:{" "}
-          <span className="font-semibold">{business?.description ?? null}</span>
-        </p>
-        <p className="text-lg">
-          Alamat Usaha:{" "}
-          <span className="font-semibold">{business?.address ?? null}</span>
-        </p>
+      <div className="flex flex-col gap-2 md:gap-4">
+        <div className="flex flex-col md:gap-2 md:text-lg">
+          <p className="font-light text-neutral-800/50">Nama Usaha</p>
+          <p className="font-semibold text-neutral-800">
+            {business?.name ?? "Nama usaha belum tersimpan"}
+          </p>
+        </div>
+        <div className="flex flex-col md:gap-2 md:text-lg">
+          <p className="font-light text-neutral-800/50">Nomer Whatsapp</p>
+          <p className="font-semibold text-neutral-800">
+            {business?.whatsAppNumber ?? "Nomer Whatsapp belum tersimpan"}
+          </p>
+        </div>
+        <div className="flex flex-col md:gap-2 md:text-lg">
+          <p className="font-light text-neutral-800/50">Alamat</p>
+          <p className="font-semibold text-neutral-800">
+            {business?.address ?? "Alamat belum tersimpan"}
+          </p>
+        </div>
+        <div className="flex flex-col md:gap-2 md:text-lg">
+          <p className="font-light text-neutral-800/50">Tentang Usaha</p>
+          <p className="font-semibold text-neutral-800">
+            {business?.description ?? (
+              <span className="font-light text-neutral-800/50">
+                Ceritakan profil usaha, syarat dan ketentuan pemesanan, dan
+                lain-lain untuk menarik pelanggan
+              </span>
+            )}
+          </p>
+        </div>
+
+        <h2 className="text-lg font-semibold underline text-sky-600">
+          Social Media
+        </h2>
+        <div className="flex flex-col md:gap-2 md:text-lg">
+          <p className="font-light text-neutral-800/50">Instagram</p>
+          <p className="font-semibold text-neutral-800">
+            {business?.instagramAccount ?? "-"}
+          </p>
+        </div>
+        <div className="flex flex-col md:gap-2 md:text-lg">
+          <p className="font-light text-neutral-800/50">Tiktok</p>
+          <p className="font-semibold text-neutral-800">
+            {business?.tiktokAccount ?? "-"}
+          </p>
+        </div>
+        <div className="flex justify-center">
+          <Link
+            href={`/profile/${user!.id}/edit`}
+            className="py-2 px-4 rounded-md text-lg bg-blue-400 my-2 md:my-4"
+          >
+            Update Profil
+          </Link>
+        </div>
       </div>
-      <Link href={`/profile/${user!.id}/edit`} className="py-2 px-4 rounded-md text-lg bg-blue-400">
-        Update Profil
-      </Link>
     </div>
   );
 }

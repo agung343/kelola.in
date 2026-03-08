@@ -83,9 +83,8 @@ export async function CreateProduct(
   });
 
   revalidatePath(`/product/catalog`);
-  return {
-    success: true,
-  };
+  
+  redirect("/product/catalog")
 }
 
 export async function DeleteProduct(id: string) {
@@ -205,4 +204,83 @@ export async function CreateCategoryAction(prevState: ReturnState, formData: For
   return {
     success: true
   }
+}
+
+export async function EditProductAction(slug: string, prevState: ReturnState, formData: FormData):Promise<ReturnState> {
+  const session = await useGetSession()
+  if (!session) {
+    redirect("/auth")
+  }
+  const user = session.user
+  const business = await prisma.business.findUnique({
+    where: {
+      ownerId: user.id
+    },
+    select: {
+      id: true
+    }
+  })
+
+  const product = await prisma.product.findFirst({
+    where: {
+      slug,
+      userId: user.id,
+      businessId: business!.id,
+    }
+  })
+  if (!product) {
+    return {
+      success: false,
+      message: "Produk tidak ditemukan"
+    }
+  }
+
+  const raw = {
+    name: formData.get("name") as string,
+    price: Number(formData.get("price")),
+    categoryId: formData.get("category"),
+    description: formData.get("description") as string,
+    imageUrl: formData.get("imageUrl")?.toString() || product.imageUrl ,
+  };
+
+  const parsed = schema.safeParse(raw);
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      success: false,
+      errors: {
+        name: fieldErrors.name?.[0],
+        price: fieldErrors.price?.[0],
+        category: fieldErrors.categoryId?.[0]
+      },
+    };
+  }
+
+  const newSlug = slugify(parsed.data.name, { replacement: "-", lower: true });
+
+  try {
+    await prisma.product.update({
+      where: {
+        userId: user.id,
+        id: product.id
+      },
+      data: {
+        name: parsed.data.name,
+        slug: newSlug,
+        price: parsed.data.price,
+        description: parsed.data.description,
+        imageUrl: parsed.data.imageUrl,
+        categoryId: parsed.data.categoryId,
+      }
+    })    
+  } catch (error) {
+    console.error("Something went wrong", error)
+    return {
+      success: false,
+      message: "Gagal update produk"
+    }
+  }
+  revalidatePath("/product/catalog")
+
+  redirect("/product/catalog")
 }

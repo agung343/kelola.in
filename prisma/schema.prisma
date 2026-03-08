@@ -97,6 +97,8 @@ model Business {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("business")
 }
 
 model Product {
@@ -135,11 +137,17 @@ model Category {
   products Product[]
 
   businessId String
-  business Business @relation(fields: [businessId], references: [id])
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
   @@unique([businessId, name])
   @@index([businessId])
   @@map("category")
+}
+
+enum OrderStatus {
+  Dikerjakan
+  Dibatalkan
+  Selesai
 }
 
 model Order {
@@ -152,9 +160,10 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt  
   totalAmount Int
+  status OrderStatus @default(Dikerjakan)
   
   businessId String
-  business Business @relation(fields: [businessId], references: [id])
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
   items OrderItem[]
 

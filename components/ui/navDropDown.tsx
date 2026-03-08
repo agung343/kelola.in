@@ -7,7 +7,15 @@ interface Item {
   href: string;
 }
 
-export default function NavDropDown({ label, items }: {label: string, items: Item[]}) {
+export default function NavDropDown({
+  label,
+  items,
+  onItemClick,
+}: {
+  label: string;
+  items: Item[];
+  onItemClick?: () => void;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -34,19 +42,28 @@ export default function NavDropDown({ label, items }: {label: string, items: Ite
           ▾
         </span>
       </button>
-      {isOpen && (<>
-        <div className="absolute left-0 max-w-32 rounded-md bg-neutral-100 z-50 shadow-white">
+      {isOpen && (
+        <>
+          <div className="absolute left-0 max-w-32 rounded-md bg-neutral-100 z-50 shadow-white">
             <ul className="py-1">
-                {items.map(item => (
-                    <li key={item.label}>
-                        <Link href={item.href} onClick={() => setIsOpen(false)} className="block px-4 py-2 hover:bg-neutral-200">
-                            {item.label}
-                        </Link>
-                    </li>
-                ))}
+              {items.map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    onClick={() => {
+                      setIsOpen(false)
+                      onItemClick?.()
+                    }}
+                    className="block px-4 py-2 hover:bg-neutral-200"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
-        </div>
-      </>)}
+          </div>
+        </>
+      )}
     </div>
   );
 }

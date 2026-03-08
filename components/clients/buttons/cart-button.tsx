@@ -1,6 +1,6 @@
 "use client";
 import { useCartStore } from "@/store/cart-context";
-import { ShoppingCart, Trash2 } from "lucide-react";
+import { Trash2, ShoppingBag } from "lucide-react";
 import {
   Dialog,
   DialogTrigger,
@@ -16,8 +16,8 @@ export default function CartButton() {
 
   return (
     <Dialog>
-      <DialogTrigger className="fixed bottom-20 right-6 md:hidden bg-pink-600/90 backdrop-blur-md p-2 rounded-full shadow-xl">
-        <ShoppingCart size={20} />
+      <DialogTrigger className="fixed bottom-20 right-6 md:hidden bg-zinc-100 backdrop-blur-md p-2 rounded-full shadow-xl">
+        <ShoppingBag size={20} />
         <div className="relative">
           <span className="absolute -bottom-3 -right-3 px-1 border border-white rounded-full text-xs font-light bg-pink-400">
             {totalItems}

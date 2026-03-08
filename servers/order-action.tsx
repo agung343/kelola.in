@@ -1,7 +1,11 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { useGetSession } from "@/lib/useGetSession";
 import { z } from "zod";
 import { normalizeWhatsappNumber } from "@/lib/whatsapp-format";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { RupiahFormat, DateFormat } from "@/lib/indonesian-format";
 
 const itemSchema = z.object({
   id: z.string(),
@@ -36,7 +40,7 @@ export type OrderState = {
     items?: string;
   };
   message?: string;
-  waUrl?: string
+  waUrl?: string;
 };
 
 export async function CreateNewOrder(
@@ -144,36 +148,115 @@ export async function CreateNewOrder(
     const message = `
     Formulir Order
 
-    Nama: ${parsed.data.name}
-    Nomer WA: ${parsed.data.whatsAppNumber}
-    Alamat: ${parsed.data.address ?? "-"}
-    Tanggal Pengambilan/pengiriman: ${parsed.data.bookingDate}
-    catatan: ${parsed.data.notes}
-    total: ${totalAmount}
+  Nama: ${parsed.data.name}
+  Nomer WA: ${parsed.data.whatsAppNumber}
+  ${parsed.data.address && `Alamat: ${parsed.data.address ?? "-"}`}
+  ${
+    parsed.data.bookingDate &&
+    `Tanggal Pengambilan/pengiriman: ${DateFormat(parsed.data.bookingDate)}`
+  }
+  ${parsed.data.notes && `Catatan: ${parsed.data.notes}`}
+  total: ${RupiahFormat(totalAmount)}
 
     Item Pesanan:
     ${orderItemData
-      .map((item) => {
+      .map((item, index) => {
         const product = productMap.get(item.productId);
-        return `- ${product?.name} x ${item.quantity}`;
+        return `${index + 1}. ${product?.name} x ${item.quantity}`;
       })
       .join("\n")}
     `;
 
-    const encodedMessage = encodeURIComponent(message)
-    const ownerWhatsAppNumber = normalizeWhatsappNumber(business.whatsAppNumber)
+    const encodedMessage = encodeURIComponent(message);
+    const ownerWhatsAppNumber = normalizeWhatsappNumber(
+      business.whatsAppNumber
+    );
 
-    const waUrl = `https://wa.me/${ownerWhatsAppNumber}?text=${encodedMessage}`
+    const waUrl = `https://wa.me/${ownerWhatsAppNumber}?text=${encodedMessage}`;
 
     return {
       success: true,
       message: "Pesanan kamu sedang diproses",
-      waUrl
+      waUrl,
     };
   } catch (error) {
     return {
       success: false,
       message: "Terjadi kesalahan server",
     };
+  }
+}
+
+export async function CanceledOrderAction(id: string) {
+  const session = await useGetSession();
+  if (!session) {
+    redirect("/auth");
+  }
+  const user = session.user;
+
+  const business = await prisma.business.findUnique({
+    where: {
+      ownerId: user.id,
+    },
+    select: {
+      id: true,
+    },
+  });
+  const existingOrder = await prisma.order.findUnique({
+    where: { id, businessId: business?.id },
+  });
+  if (!existingOrder) throw new Error("Order tidak ditemukan");
+
+  try {
+    await prisma.order.update({
+      where: {
+        id,
+        businessId: business?.id,
+      },
+      data: {
+        status: "Dibatalkan",
+      },
+    });
+
+    revalidatePath("/order")
+  } catch (error) {
+    throw new Error("Something went wrong");
+  }
+}
+
+export async function CompletedOrderAction(id: string) {
+  const session = await useGetSession();
+  if (!session) {
+    redirect("/auth");
+  }
+  const user = session.user;
+
+  const business = await prisma.business.findUnique({
+    where: {
+      ownerId: user.id,
+    },
+    select: {
+      id: true,
+    },
+  });
+  const existingOrder = await prisma.order.findUnique({
+    where: { id, businessId: business?.id },
+  });
+  if (!existingOrder) throw new Error("Order tidak ditemukan");
+
+  try {
+    await prisma.order.update({
+      where: {
+        id,
+        businessId: business?.id,
+      },
+      data: {
+        status: "Selesai",
+      },
+    });
+
+    revalidatePath("/order")
+  } catch (error) {
+    throw new Error("Something went wrong");
   }
 }

@@ -23,7 +23,7 @@ export default function EditBusiness({
   return (
     <form
       action={formAction}
-      className="p-4 md:p-8 w-1/3 mx-auto shadow rounded-md shadow-neutral-200 my-8"
+      className="p-4 md:p-8 md:w-1/3 mx-auto shadow rounded-md shadow-neutral-200 my-8"
     >
       <h1 className="text-2xl md:text-4xl text-center font-bold mb-8 text-neutral-800">
         Profile Usaha

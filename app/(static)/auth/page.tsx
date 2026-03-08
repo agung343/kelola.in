@@ -1,6 +1,7 @@
 'use client'
 import { signIn } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
+import { FcGoogle } from "react-icons/fc"
 
 export default function Auth() {
     async function handleLogin() {
@@ -18,7 +19,7 @@ export default function Auth() {
                     </h1>
                 </div>
                 <Button onClick={handleLogin} className="w-full h-11 text-sm font-semibold">
-                    Continue with Google
+                   <FcGoogle /> Masuk dengan Google
                 </Button>
             </div>
         </div>

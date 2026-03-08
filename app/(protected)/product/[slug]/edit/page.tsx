@@ -14,6 +14,17 @@ export default async function EditCatalog({
     headers: await headers()
   })
   const userId = session!.user.id
+  const business = await prisma.business.findUnique({
+    where: {
+      ownerId: userId
+    },
+    select: {id: true}
+  })
+  const categories = await prisma.category.findMany({
+    where: {
+      businessId: business?.id
+    }
+  })
   const product = await prisma.product.findFirst({
     where: {
       slug,
@@ -28,7 +39,7 @@ export default async function EditCatalog({
 
   return (
     <main className="p-4 md:p-8 ">
-      <ProductForm mode="edit" name={product.name} price={product.price} description={product.description ?? ""} />
+      <ProductForm mode="edit" slug={slug} name={product.name} price={product.price} description={product.description ?? ""} categories={categories} />
     </main>
   );
 }

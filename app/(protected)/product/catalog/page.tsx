@@ -1,12 +1,15 @@
 import Link from "next/link";
 import ProductList from "@/components/product-list";
+import NameFilter from "@/components/clients/name-filter";
 import { useGetSession } from "@/lib/useGetSession";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@/app/generated/prisma/client";
 import { redirect } from "next/navigation";
-import { PenLine } from "lucide-react";
 import CopyLinkButton from "@/components/clients/buttons/copy-link";
 
-export default async function BusinessProductCatalog() {
+export default async function BusinessProductCatalog({searchParams}: {searchParams: Promise<{name?: string}>}) {
+  const name = (await searchParams).name
+
   const session = await useGetSession();
   const userId = session!.user.id;
   const business = await prisma.business.findUnique({
@@ -18,11 +21,22 @@ export default async function BusinessProductCatalog() {
     redirect(`/profile/${userId}`);
   }
 
+  const where: Prisma.ProductWhereInput = {
+    userId: userId,
+    isActive: true
+  }
+  if (name) {
+    where.name = {
+      contains: name,
+      mode: "insensitive"
+    }
+  }
+
   const products = await prisma.product.findMany({
-    where: {
-      userId: userId,
-      isActive: true,
-    },
+    where,
+    orderBy: {
+      name: "asc"
+    }
   });
   if (products.length === 0) {
     return (
@@ -55,6 +69,7 @@ export default async function BusinessProductCatalog() {
           </Link>
           <CopyLinkButton slug={business.slug} />
         </div>
+        <NameFilter url="product/catalog" placeholder="cari produk..." />
       </div>
       <ProductList mode="user" products={products} />
     </main>

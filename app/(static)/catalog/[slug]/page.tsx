@@ -57,6 +57,9 @@ export default async function CatalogPage({
 
   const products = await prisma.product.findMany({
     where,
+    orderBy: {
+      name: "asc"
+    }
   });
 
   return (

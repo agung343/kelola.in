@@ -4,6 +4,7 @@ import { PenLine } from "lucide-react";
 import DeleteProductButton from "./clients/buttons/delete-button";
 import RestoreProductButton from "./clients/buttons/restore-button";
 import AddButton from "./clients/buttons/add-button";
+import { RupiahFormat } from "@/lib/indonesian-format";
 
 interface Props {
   products: {
@@ -14,10 +15,10 @@ interface Props {
     price: number;
     description?: string | null;
   }[];
-  mode: "order" | "user"  | "deleted";
+  mode: "order" | "user" | "deleted";
 }
 
-export default function ProductList({ products, mode}: Props) {
+export default function ProductList({ products, mode }: Props) {
   return (
     <div className="p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 auto-rows-fr justify-items-center md:place-items-center mt-4">
       {products.map((item) => (
@@ -27,21 +28,21 @@ export default function ProductList({ products, mode}: Props) {
         >
           <h2 className="text-xl font-bold text-neutral-800/70">{item.name}</h2>
           <Image
-            src={item?.imageUrl ?? ""}
+            src={item!.imageUrl ?? "file.svg"}
             height={320}
             width={320}
-            alt={item?.description ?? ""}
+            alt={item.description ?? item.name}
             className="rounded-lg w-full h-full md:h-96 object-cover"
           />
           <h2 className="text-lg font-semibold text-neutral-800/70">
-            Rp {item.price}
+            {RupiahFormat(item.price)}
           </h2>
-          <div className="flex-1">
-            <p className="font-light text-sm">
-              Tentang Produk:{" "}
-              <span className="font-semibold">{item.description}</span>
-            </p>
-          </div>
+
+          <p className="font-light text-sm">
+            Tentang Produk:{" "}
+            <span className="font-semibold">{item.description}</span>
+          </p>
+
           {mode === "user" && (
             <div className="flex items-center justify-end gap-4">
               <Link
@@ -54,9 +55,7 @@ export default function ProductList({ products, mode}: Props) {
               <DeleteProductButton id={item.id} />
             </div>
           )}
-          {mode === "order" && (
-            <AddButton product={item} />
-          )}
+          {mode === "order" && <AddButton product={item} />}
           {mode === "deleted" && (
             <div className="flex justify-center">
               <RestoreProductButton id={item.id} />

@@ -1,7 +1,7 @@
 "use client";
 import { upload } from "@imagekit/next";
 import { useRef, useState, useActionState } from "react";
-import { CreateProduct, type ReturnState } from "@/servers/product-action";
+import { CreateProduct, EditProductAction, type ReturnState } from "@/servers/product-action";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import type { Category } from "./catalog-filter";
@@ -13,19 +13,22 @@ const initialState: ReturnState = {
 
 interface Props {
   mode: "create" | "edit"
+  slug?: string
   name?: string
   price?: number
   description?: string
   categories?: Category[]
 }
 
-export default function ProductForm({mode, name, price, description, categories}: Props) {
+export default function ProductForm({mode, name, slug, price, description, categories}: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [progres, setProgres] = useState(0);
   const [imageUrl, setImageUrl] = useState<string | undefined>("");
+
+  const editAction = EditProductAction.bind(null, slug!)
   const [state, formAction, isPending] = useActionState(
-    CreateProduct,
+    mode === "create" ? CreateProduct : editAction,
     initialState
   );
 
@@ -74,7 +77,7 @@ export default function ProductForm({mode, name, price, description, categories}
       className="p-4 md:p-8 md:w-1/3 mx-auto shadow shadow-neutral-200 my-8 rounded-md"
     >
       <h1 className="text-lg md:text-4xl font-semibold text-center mb-4 text-blue-800/70">
-        Tambah Produk ke Catalog
+        {mode === "create" ? "Tambah Produk ke Katalog" : "Update Produk Katalog"}
       </h1>
       <div className="space-y-4">
         <div className="flex flex-col gap-1.5">
@@ -140,7 +143,7 @@ export default function ProductForm({mode, name, price, description, categories}
           <CreateCategory />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="image" className="text-sm md:text-base">File Image </label>
+          <label htmlFor="image" className="text-sm md:text-base">File Gambar </label>
           <div className="flex items-center gap-4">
             <input
               type="file"
@@ -155,6 +158,7 @@ export default function ProductForm({mode, name, price, description, categories}
               Upload Image
             </button>
           </div>
+          {progres === 100 && <p className="text-xs font-light text-green-500/70">file uploaded</p>}
           {progres > 0 && <Progress value={progres} className={`w-1/2 ${progres === 100 ? "bg-green-500/80" : "bg-primary/20"}`} />}
         </div>
         <div className="flex flex-col gap-1.5">
@@ -174,7 +178,7 @@ export default function ProductForm({mode, name, price, description, categories}
             type="submit"
             disabled={isPending}
           >
-            {isPending ? "Sedang Menyimpan..." : "Tambah Katalog"}
+            {isPending ? "Sedang Menyimpan..." : mode === "create" ? "Tambah Katalog" : "Update Produk"}
           </Button>
         </div>
       </div>
