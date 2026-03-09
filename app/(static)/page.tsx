@@ -3,13 +3,13 @@ import BackToTop from "@/components/clients/buttons/back-to-top";
 
 export default function Home() {
   return (
-    <div className="min-h-screen font-sans dark:bg-black">
+    <div className="min-h-screen font-dm_Sans dark:bg-black p-4 md:p-8">
       <div className="space-y-4 mt-8">
-        <h1 className="text-4xl md:text-6xl text-center font-bold text-blue-500/70">
+        <h1 className="text-4xl md:text-6xl text-center font-fraunces font-bold text-blue-500/70">
           Kelola.in
         </h1>
-        <h2 className="text-xl md:text-3xl text-center font-medium">
-          Kelola semua order dari Whatsapp dan DM Social Media di satu tempat.
+        <h2 className="text-xl md:text-3xl text-center font-medium font-fraunces">
+          Terima orderan di WhatsApp. Catat, pantau, dan kelola semuanya di Kelola.in
         </h2>
       </div>
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-6">
@@ -27,34 +27,34 @@ export default function Home() {
         </Link>
       </div>
 
-      <section id="layanan" className="mt-8 md:mt-12 p-4 md:p-8 mx-auto md:flex md:flex-col md:items-center">
+      <section id="layanan" className="mt-8 md:mt-12 p-4 mx-auto md:flex md:flex-col md:items-center">
         <div className="flex justify-between my-2 md:my-4">
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-4xl font-semibold text-orange-500/70">
-              Upgrade cara jualan di Whatsapp
+            <h2 className="text-2xl md:text-4xl font-semibold font-fraunces text-orange-500/70">
+              WhatsApp Terus Jalan, Bisnis Makin Rapi.
             </h2>
             <p className="text-neutral-800/70 font-light text-sm md:text-base">
-              Kami sadar Whatsapp kamu adalah pilar utama usaha. Buat orderan dari Whatsapp lebih rapi dan terkelola.
+              Kelola.in tidak menggantikan Whatsapp! - kami hadir di balik layar agar setiap orderan tercata rapi dan tidak ada yang terlewat.
             </p>
           </div>
         </div>
         <div className="flex justify-between my-2 md:my-4">
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-4xl font-semibold text-orange-500/70">
-              Buat katalog dan bagikan link 
+            <h2 className="text-2xl md:text-4xl font-semibold font-fraunces text-orange-500/70">
+              Satu Link Katalog, Pembeli Langsung Bisa Pesan.
             </h2>
             <p className="text-neutral-800/70 font-light text-sm md:text-base">
-              Pembeli bisa memilih, memasukan keranjang dan checkout, pesan otomatis akan tersampaikan ke kamu.
+              Buat katalog produk dengan foto, harga, dan deskripsi singkat. Bagikan linknya, pembeli pilih barang, checkout dan orderan otomatis masuk lewat pesan WhatsApp.
             </p>
           </div>
         </div>
         <div className="flex justify-between">
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-4xl font-semibold text-orange-500/70">
-              Pantau Orderan dari Whatsapp
+            <h2 className="text-2xl md:text-4xl font-semibold font-fraunces text-orange-500/70">
+              Semua Orderan Tercatat. Tidak ada yang terlewat.
             </h2>
             <p className="text-neutral-800/70 font-light text-sm md:text-base">
-              Riwayat orderan dari chat Whatsapp lebih rapi dan tandai mana yang sudah selesai ataupun dibatalkan.
+              Pantau status orderan dari satu dashboard, tandai sebagai diproses, selesai atau dibatalkan tanpa perlu cari chat atau scrool chat panjang.
             </p>
           </div>
         </div>

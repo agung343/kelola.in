@@ -24,7 +24,7 @@ export default function UserHeader() {
               <GripVertical />
             </DrawerTrigger>
             <DrawerContent className="p-4 max-w-64">
-              <DrawerTitle className="text-2xl font-bold">
+              <DrawerTitle className="text-2xl font-fraunces font-bold">
                 Kelola.in
               </DrawerTitle>
               <h1 className="text-xl font-medium">{user.name || user.email}</h1>
@@ -47,7 +47,7 @@ export default function UserHeader() {
             {pageTitle}
           </h2>
         </div>
-        <h2 className="md:hidden text-2xl font-bold text-blue-800/70">
+        <h2 className="md:hidden text-2xl font-fraunces font-bold text-blue-800/70">
           Kelola.in
         </h2>
       </div>

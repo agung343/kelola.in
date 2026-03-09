@@ -8,74 +8,90 @@ export const metadata: Metadata = {
 
 export default function ServicePage() {
   return (
-    <main className="min-h-screen font-sans dark:bg-black p-4 md:-p-8">
+    <main className="min-h-screen dark:bg-black p-4 md:-p-8 font-dm_Sans">
       <div className="space-y-4 mt-8">
-        <h1 className="text-4xl md:text-6xl text-center font-bold text-blue-500/70">
-          LAYANAN Kelola.in
+        <h1 className="text-2xl md:text-6xl font-fraunces font-bold text-neutral-800/70">
+          Terima Orderan di <span className="text-green-500/70 font-extrabold">Whatsapp</span>, Kelola semuanya di <span className="text-blue-800/70 font-extrabold">Kelola.in</span>
         </h1>
-        <h2 className="text-xl md:text-3xl text-center font-medium">
-          Semua Fitur yang membantu kamu mengelola pesanan dari Whatsapp dan
-          media sosial jadi lebih rapi.
+        <h2 className="text-lg md:text-3xl text-left text-wrap font-light text-neutral-800/70">
+          Orderan rapi, bisnis profesional, WhatsApp tetap jalan.<br /> Kelola.in
+          adalah tools pencatatan dan manajemen pesanan untuk pebisnis yang
+          masih pakai WhatsApp — dan tidak mau ribet ganti sistem.
         </h2>
       </div>
 
       <section id="fitur" className="mt-8 md:mt-12 p-4 md:p-8">
-        <h2 className="text-3xl md:text-6xl text-center font-semibold text-blue-500/70 mb-4">
+        <h2 className="text-2xl md:text-4xl font-fraunces text-center font-semibold text-blue-500/70 mb-4">
           Fitur Kelola.in
         </h2>
         <div className="flex justify-between my-2 md:my-4">
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-4xl font-medium text-orange-500/70">
-              Whatsapp tetap pilar utama
+            <h2 className="text-2xl md:text-4xl font-fraunces font-medium text-orange-500/70">
+              Whatsapp tetap jadi busat usaha
             </h2>
             <ul className="text-neutral-800/70 font-light text-sm md:text-base list-disc list-inside">
-              <li>Whatsapp tetap jadi tempat orderan kamu masuk. </li>
-              <li>Kelolain membantu usaha kamu lebih rapi dan terstruktur.</li>
+              <li>
+                Semua orderan tetap masuk lewat pesan Whatsapp seperti biasa.{" "}
+              </li>
+              <li>
+                Kelola.in bekerja dibalik layar agar usaha kamu terlihat lebih
+                profesional di mata pembeli.
+              </li>
             </ul>
           </div>
         </div>
         <div className="flex justify-between my-2 md:my-4">
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-4xl font-medium text-orange-500/70">
-              Katalog Produk
+            <h2 className="text-2xl md:text-4xl font-fraunces font-medium text-orange-500/70">
+              Share link Katalog Produk
             </h2>
             <ul className="text-neutral-800/70 font-light text-sm md:text-base list-disc list-inside">
-              <li>Buat Katalog Produk beserta foto, harga dan deskripsi barang/jasa.</li>
-            
-              <li>Bagikan link katalog ke pembeli agar mereka bisa memilih produk
-              dengan mudah.</li>
+              <li>
+                Buat tampilan produk lengkap dengan foto, harga dan deskripsi -
+                tanpa perlu website sendiri.
+              </li>
+
+              <li>
+                Cukup bagikan satu link ke pembeli, mereka bisa lihat semua
+                produk kamu.
+              </li>
             </ul>
           </div>
         </div>
         <div className="flex justify-between my-2 md:my-4">
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-4xl font-medium text-orange-500/70">
-              Direct Message setelah Checkout
+            <h2 className="text-2xl md:text-4xl font-fraunces font-medium text-orange-500/70">
+              Pesan Otomatis Setelah Chekcout
             </h2>
             <ul className="text-neutral-800/70 font-light text-sm md:text-base list-disc list-inside">
-              <li>Pembeli memilih beberapa produk di halaman katalog sebelum
-              checkout.</li>
-              <li>Pembeli langsung diarahkan direct message ke nomer Whatsapp kamu.</li>
+              <li>
+                Pembeli pilih produk dari katalog, lalu checkout, semua detail
+                pesanan otomatis terkirim lewat pesan Whatsapp
+              </li>
+              <li>
+                Cukup chat seperti biasa, tidak ada form ribet ataupun aplikasi
+                tambahan.
+              </li>
             </ul>
           </div>
         </div>
         <div className="flex justify-between my-2 md:my-4">
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-4xl font-medium text-orange-500/70">
+            <h2 className="text-2xl md:text-4xl font-fraunces font-medium text-orange-500/70">
               Tracking Order
             </h2>
             <ul className="text-neutral-800/70 font-light text-sm md:text-base list-disc list-inside">
-              <li>Pantau semua orderan yang masuk lewat kelolain dalam satu
-              dashboard.</li>
-              
+              <li>
+                Tidak perlu scrool chat panjang untuk status pesanan. Semua
+                orderan tercatat otomatis di dashboard
+              </li>
+
               <li>Tandai order sebagai diproses, dibatalkan atau selesai.</li>
             </ul>
           </div>
         </div>
       </section>
-      <section id="steps" className="my-2 md:my-2">
-        
-      </section>
+      <section id="steps" className="my-2 md:my-2"></section>
       <BackToTop />
     </main>
   );
