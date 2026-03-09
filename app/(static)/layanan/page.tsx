@@ -74,7 +74,7 @@ export default function ServicePage() {
         </div>
       </section>
       <section id="steps" className="my-2 md:my-2">
-        <div className="border border-neutral-200 p-2 rounded-md"></div>
+        
       </section>
       <BackToTop />
     </main>
