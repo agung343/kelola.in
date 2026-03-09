@@ -10,19 +10,24 @@ import {
   DialogClose,
 } from "../ui/dialog";
 import { useCartStore } from "@/store/cart-context";
-import { CreateNewOrder, type OrderState } from "@/servers/order-action";
+import { CreateNewOrder, AddOrderAction, type OrderState } from "@/servers/order-action";
 import { ShoppingCart } from "lucide-react";
+
+interface Props {
+  slug?: string
+  mode: "user" | "client"
+}
 
 const initialState: OrderState = {
   success: false,
 };
 
-export default function OrderForm({ slug }: { slug: string }) {
+export default function OrderForm({ slug, mode }: Props) {
   const { items, getTotal, clearCart } = useCartStore();
 
-  const createOrderWithSlug = CreateNewOrder.bind(null, slug);
+  const createOrderWithSlug = CreateNewOrder.bind(null, slug!);
   const [state, formAction, isPending] = useActionState(
-    createOrderWithSlug,
+    mode === "client" ? createOrderWithSlug : AddOrderAction,
     initialState
   );
 

@@ -10,9 +10,11 @@ export type Category = {
 export default function CatalogFilter({
   slug,
   categories,
+  mode,
 }: {
-  slug: string;
+  slug?: string;
   categories: Category[];
+  mode: "user" | "client";
 }) {
   const router = useRouter();
   const [query, setQuery] = useState<string>("");
@@ -29,8 +31,12 @@ export default function CatalogFilter({
     if (query.trim().length > 0) {
       searchParams.set("search", query);
     }
-
-    router.push(`/catalog/${slug}?${searchParams.toString()}`);
+    
+    if (mode === "client") {
+      router.push(`/catalog/${slug}?${searchParams.toString()}`);
+    } else {
+      router.push(`/order/add-order?${searchParams.toString()}`)
+    }
   }
 
   return (

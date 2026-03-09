@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useGetSession } from "@/lib/useGetSession";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
@@ -77,7 +78,12 @@ export default async function OrderPage({
       <h1 className="text-lg md:text-2xl xl:text-4xl font-bold">
         Order <span className="text-sm">{`(order dari link)`}</span>
       </h1>
-      <NameFilter url="order" placeholder="cari name pembeli..." />
+      <div className="flex flex-col md:flex-row md:items-center gap-2 justify-between">
+        <NameFilter url="order" placeholder="cari name pembeli..." />
+        <Link href={'/order/add-order'} className="py-1.5 px-3 text-sm rounded-md bg-emerald-500/70 active:bg-emerald-500 font-dm_Sans text-neutral-200 w-fit">
+          + Buat Order
+        </Link>
+      </div>
       <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4 my-4">
         {orders.map((order) => (
           <div

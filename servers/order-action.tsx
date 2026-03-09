@@ -218,7 +218,7 @@ export async function CanceledOrderAction(id: string) {
       },
     });
 
-    revalidatePath("/order")
+    revalidatePath("/order");
   } catch (error) {
     throw new Error("Something went wrong");
   }
@@ -255,8 +255,155 @@ export async function CompletedOrderAction(id: string) {
       },
     });
 
-    revalidatePath("/order")
+    revalidatePath("/order");
   } catch (error) {
     throw new Error("Something went wrong");
+  }
+}
+
+export async function AddOrderAction(
+  prevState: OrderState,
+  formData: FormData
+): Promise<OrderState> {
+  const session = await useGetSession();
+  if (!session) {
+    redirect("/auth");
+  }
+  const user = session.user;
+
+  const business = await prisma.business.findUnique({
+    where: {
+      ownerId: user.id,
+    },
+    select: { id: true },
+  });
+  if (!business) {
+    redirect("/beranda");
+  }
+
+  const raw = {
+    name: formData.get("name") as string,
+    whatsAppNumber: formData.get("whatsAppNumber") as string,
+    address: formData.get("address")?.toString() || null,
+    bookingDate: formData.get("bookingDate")?.toString() || null,
+    notes: formData.get("notes")?.toString() || null,
+    items: formData.get("items")
+      ? JSON.parse(formData.get("items") as string)
+      : [],
+  };
+
+  const parsed = schema.safeParse(raw);
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.flatten().fieldErrors;
+    return {
+      success: false,
+      errors: {
+        name: fieldErrors.name?.[0],
+        whatsAppNumber: fieldErrors.whatsAppNumber?.[0],
+        items: fieldErrors.items?.[0],
+      },
+    };
+  }
+
+  const customerPhone = parsed.data.whatsAppNumber;
+
+  const parsedItems = parsed.data.items;
+  if (!parsedItems.length) {
+    return {
+      success: false,
+      message: "Keranjang kosong",
+    };
+  }
+  const productIds = parsedItems.map((i) => i.id);
+  const products = await prisma.product.findMany({
+    where: { id: { in: productIds }, businessId: business.id },
+  });
+  if (products.length !== parsedItems.length) {
+    return {
+      success: false,
+      message: "Produk tidak valid",
+    };
+  }
+
+  const productMap = new Map(products.map((p) => [p.id, p]));
+  let totalAmount = 0;
+
+  const orderItemData = parsedItems.map((item) => {
+    const product = productMap.get(item.id);
+    if (!product) throw new Error("Produk tidak valid");
+
+    const subTotal = product.price * item.quantity;
+    totalAmount += subTotal;
+
+    return {
+      productId: product.id,
+      quantity: item.quantity,
+      price: product.price,
+      subTotal,
+    };
+  });
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      const order = await tx.order.create({
+        data: {
+          customerName: parsed.data.name,
+          customerPhone,
+          customerAddress: parsed.data.address,
+          bookingDate: parsed.data.bookingDate
+            ? new Date(parsed.data.bookingDate)
+            : null,
+          totalAmount,
+          businessId: business.id,
+          notes: parsed.data.notes,
+        },
+      });
+
+      for (const item of orderItemData) {
+        await tx.orderItem.create({
+          data: {
+            ...item,
+            orderId: order.id,
+          },
+        });
+      }
+    });
+
+    const message = `
+    Pesanan ${parsed.data.name}
+
+    ${parsed.data.address && `Alamat: ${parsed.data.address ?? "-"}`}
+  ${
+    parsed.data.bookingDate &&
+    `Tanggal Pengambilan/pengiriman: ${DateFormat(parsed.data.bookingDate)}`
+  }
+  ${parsed.data.notes && `Catatan: ${parsed.data.notes}`}
+  total: ${RupiahFormat(totalAmount)}
+
+    Item Pesanan:
+    ${orderItemData
+      .map((item, index) => {
+        const product = productMap.get(item.productId);
+        return `${index + 1}. ${product?.name} x ${item.quantity}`;
+      })
+      .join("\n")}
+    `;
+
+    const encodedMessage = encodeURIComponent(message)
+    const customerWhatsAppNumber = normalizeWhatsappNumber(customerPhone)
+
+    const waUrl = `https://wa.me/${customerWhatsAppNumber}?text=${encodedMessage}`
+
+    return {
+      success: true,
+      message: "Mengirim konfirmasi ke pembeli",
+      waUrl
+    }
+  } catch (error) {
+    console.error("Something went wrong", error);
+    return {
+      success: false,
+      message: "Terjadi kesalahan server"
+    }
   }
 }
