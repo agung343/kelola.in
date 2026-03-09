@@ -67,11 +67,11 @@ export default async function CatalogPage({
       <h1 className="text-2xl md:text-4xl text-neutral-800/70">
         {business.name} catalog:
       </h1>
-      <CatalogFilter slug={slug} categories={categories} />
+      <CatalogFilter slug={slug} categories={categories} mode="client" />
       <ProductList products={products} mode="order" />
       <CartButton />
       <BackToTop />
-      <OrderForm slug={slug} />
+      <OrderForm slug={slug} mode="client" />
     </main>
   );
 }

@@ -27,7 +27,7 @@ export default function ServicePage() {
         <div className="flex justify-between my-2 md:my-4">
           <div className="space-y-2">
             <h2 className="text-2xl md:text-4xl font-fraunces font-medium text-orange-500/70">
-              Whatsapp tetap jadi busat usaha
+              Whatsapp tetap jadi pusat usaha
             </h2>
             <ul className="text-neutral-800/70 font-light text-sm md:text-base list-disc list-inside">
               <li>
