@@ -262,25 +262,10 @@ export async function CompletedOrderAction(id: string) {
 }
 
 export async function AddOrderAction(
+  slug: string,
   prevState: OrderState,
   formData: FormData
 ): Promise<OrderState> {
-  const session = await useGetSession();
-  if (!session) {
-    redirect("/auth");
-  }
-  const user = session.user;
-
-  const business = await prisma.business.findUnique({
-    where: {
-      ownerId: user.id,
-    },
-    select: { id: true },
-  });
-  if (!business) {
-    redirect("/beranda");
-  }
-
   const raw = {
     name: formData.get("name") as string,
     whatsAppNumber: formData.get("whatsAppNumber") as string,
@@ -305,6 +290,16 @@ export async function AddOrderAction(
     };
   }
 
+  const business = await prisma.business.findFirst({
+    where: {
+      slug,
+    },
+    select: { id: true },
+  });
+  if (!business) {
+    throw new Error("profil usaha belum update")
+  }
+
   const customerPhone = parsed.data.whatsAppNumber;
 
   const parsedItems = parsed.data.items;
@@ -316,7 +311,7 @@ export async function AddOrderAction(
   }
   const productIds = parsedItems.map((i) => i.id);
   const products = await prisma.product.findMany({
-    where: { id: { in: productIds }, businessId: business.id },
+    where: { id: { in: productIds }, businessId: business!.id },
   });
   if (products.length !== parsedItems.length) {
     return {
@@ -389,21 +384,21 @@ export async function AddOrderAction(
       .join("\n")}
     `;
 
-    const encodedMessage = encodeURIComponent(message)
-    const customerWhatsAppNumber = normalizeWhatsappNumber(customerPhone)
+    const encodedMessage = encodeURIComponent(message);
+    const customerWhatsAppNumber = normalizeWhatsappNumber(customerPhone);
 
-    const waUrl = `https://wa.me/${customerWhatsAppNumber}?text=${encodedMessage}`
+    const waUrl = `https://wa.me/${customerWhatsAppNumber}?text=${encodedMessage}`;
 
     return {
       success: true,
       message: "Mengirim konfirmasi ke pembeli",
-      waUrl
-    }
+      waUrl,
+    };
   } catch (error) {
     console.error("Something went wrong", error);
     return {
       success: false,
-      message: "Terjadi kesalahan server"
-    }
+      message: "Terjadi kesalahan server",
+    };
   }
 }

@@ -4,12 +4,19 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Button } from "./ui/button";
-import { Drawer, DrawerContent, DrawerTrigger, DrawerTitle } from "./ui/drawer";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger,
+  DrawerTitle,
+  DrawerHeader,
+  DrawerDescription,
+} from "./ui/drawer";
 import { GripVertical } from "lucide-react";
 
 export default function Header() {
-  const [open, setOpen] = useState(false)
-  const pageTitle = usePageTitle()
+  const [open, setOpen] = useState(false);
+  const pageTitle = usePageTitle();
   return (
     <header className="h-12 md:h-20 p-4 bg-neutral-100 text-neutral-800 rounded-b-md sticky top-0 z-50">
       <div className="flex items-center justify-between">
@@ -18,10 +25,14 @@ export default function Header() {
             <DrawerTrigger asChild>
               <GripVertical />
             </DrawerTrigger>
+
             <DrawerContent className="p-4 max-w-64">
-              <DrawerTitle className="text-2xl font-bold">
-                Kelola.in
-              </DrawerTitle>
+              <DrawerHeader>
+                <DrawerTitle className="text-2xl font-bold">
+                  Kelola.in
+                </DrawerTitle>
+                <DrawerDescription></DrawerDescription>
+              </DrawerHeader>
               <hr className="my-2" />
               <div className="flex flex-col gap-4">
                 <Navigation onCloseDrawer={() => setOpen(false)} />
@@ -30,7 +41,9 @@ export default function Header() {
               </div>
             </DrawerContent>
           </Drawer>
-          <h2 className="text-xl font-semibold text-blue-800/70">{pageTitle}</h2>
+          <h2 className="text-xl font-semibold text-blue-800/70">
+            {pageTitle}
+          </h2>
         </div>
         <h2 className="md:hidden text-2xl font-bold text-blue-800/70">
           Kelola.in
@@ -45,7 +58,7 @@ export default function Header() {
   );
 }
 
-function Navigation({onCloseDrawer} : {onCloseDrawer?: () => void}) {
+function Navigation({ onCloseDrawer }: { onCloseDrawer?: () => void }) {
   const pathname = usePathname();
 
   return (
@@ -121,12 +134,12 @@ function AuthNav() {
 }
 
 function usePageTitle() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
-  if (pathname === "/") return "Home"
-  if (pathname === "/layanan") return "Layanan"
-  if (pathname === "/pricing") return "Harga"
-  if (pathname.startsWith("/catalog")) return "Katalog"
+  if (pathname === "/") return "Home";
+  if (pathname === "/layanan") return "Layanan";
+  if (pathname === "/pricing") return "Harga";
+  if (pathname.startsWith("/catalog")) return "Katalog";
 
-  return ""
+  return "";
 }
