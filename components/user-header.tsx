@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Button } from "./ui/button";
-import { Drawer, DrawerContent, DrawerTrigger, DrawerTitle } from "./ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger, DrawerDescription, DrawerTitle } from "./ui/drawer";
 import NavDropDown from "./ui/navDropDown";
 import { GripVertical } from "lucide-react";
 
@@ -27,6 +27,7 @@ export default function UserHeader() {
               <DrawerTitle className="text-2xl font-fraunces font-bold">
                 Kelola.in
               </DrawerTitle>
+              <DrawerDescription></DrawerDescription>
               <h1 className="text-xl font-medium">{user.name || user.email}</h1>
               <hr className="my-2" />
               <div className="flex flex-col gap-4">
