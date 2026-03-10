@@ -25,10 +25,11 @@ export default async function UserAddOrder({
   }
   const user = session.user
 
-  const business = await prisma.business.findUnique({
+  const business = await prisma.business.findFirst({
     where: {ownerId: user.id},
     select: {
-        id: true
+        id: true,
+        slug: true
     }
   })
   if (!business) {
@@ -76,7 +77,7 @@ export default async function UserAddOrder({
       <ProductList products={products} mode="order" />
       <CartButton />
       <BackToTop />
-      <OrderForm mode="user" />
+      <OrderForm mode="user" slug={business.slug}  />
     </main>
   );
 }

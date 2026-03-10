@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -8,14 +8,19 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
+  DialogDescription,
 } from "../ui/dialog";
 import { useCartStore } from "@/store/cart-context";
-import { CreateNewOrder, AddOrderAction, type OrderState } from "@/servers/order-action";
+import {
+  CreateNewOrder,
+  AddOrderAction,
+  type OrderState,
+} from "@/servers/order-action";
 import { ShoppingCart } from "lucide-react";
 
 interface Props {
-  slug?: string
-  mode: "user" | "client"
+  slug: string;
+  mode: "user" | "client";
 }
 
 const initialState: OrderState = {
@@ -23,18 +28,19 @@ const initialState: OrderState = {
 };
 
 export default function OrderForm({ slug, mode }: Props) {
+  const formRef = useRef<HTMLFormElement>(null)
   const { items, getTotal, clearCart } = useCartStore();
 
-  const createOrderWithSlug = CreateNewOrder.bind(null, slug!);
-  const [state, formAction, isPending] = useActionState(
-    mode === "client" ? createOrderWithSlug : AddOrderAction,
-    initialState
-  );
+  const createOrderWithSlug = CreateNewOrder.bind(null, slug);
+  const addOrderWithSlug = AddOrderAction.bind(null, slug);
+  const action =
+    mode == "client" ? createOrderWithSlug : addOrderWithSlug;
+  const [state, formAction, isPending] = useActionState(action, initialState);
 
   useEffect(() => {
     if (state.success && state.waUrl) {
       clearCart();
-      document.querySelector("form")?.reset();
+      formRef.current?.reset()
       window.location.href = state.waUrl;
     }
   }, [state.success, state.waUrl, clearCart]);
@@ -49,8 +55,9 @@ export default function OrderForm({ slug, mode }: Props) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Checkout</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
-        <form action={formAction} className="text-sm space-y-2">
+        <form action={formAction} className="text-sm space-y-2" ref={formRef}>
           <div className="flex flex-col md:flex-row md:items-center justify-between">
             <label htmlFor="name">
               Nama{" "}
@@ -119,7 +126,12 @@ export default function OrderForm({ slug, mode }: Props) {
               type="hidden"
               id="items"
               name="items"
-              value={JSON.stringify(items)}
+              value={JSON.stringify(
+                items.map((i) => ({
+                  id: i.id,
+                  quantity: i.quantity,
+                }))
+              )}
             />
             {!items.length && (
               <p className="text-sm font-bold text-center">
@@ -158,7 +170,11 @@ export default function OrderForm({ slug, mode }: Props) {
               className="bg-green-500/70 py-2 px-4 rounded-md active:bg-green-500 disabled:bg-neutral-500"
               disabled={isPending}
             >
-              {isPending ? "Memesan" : "Pesan"}
+              {isPending
+                ? "Ordering..."
+                : mode === "user"
+                ? "Checkout"
+                : "Konfirmasi Pesanan"}
             </button>
             {!state.success && (
               <p className="text-sm text-red-500 font-semibold text-center">
