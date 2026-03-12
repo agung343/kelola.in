@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import UserHeader from "@/components/user-header";
+import Footer from "@/components/footer";
 
 export default function ProtectedLayout({
   children,
@@ -26,6 +27,7 @@ export default function ProtectedLayout({
     <div>
       <UserHeader />
       {children}
+      <Footer />
     </div>
   );
 }

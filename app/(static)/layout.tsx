@@ -1,4 +1,5 @@
 import Header from "@/components/static-header"
+import Footer from "@/components/footer"
 
 export default function StaticLayout({
     children,
@@ -9,6 +10,7 @@ export default function StaticLayout({
       <>
         <Header />
         {children}
+        <Footer />
       </>
     )
   }
