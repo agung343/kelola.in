@@ -1,11 +1,9 @@
 "use server";
 import { useGetSession } from "@/lib/useGetSession";
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
 import prisma from "@/lib/prisma";
-import { auth } from "@/lib/auth";
 import { z } from "zod";
 
 const schema = z.object({
@@ -30,9 +28,7 @@ export async function CreateProduct(
   prevState: ReturnState,
   formData: FormData
 ): Promise<ReturnState> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await useGetSession()
   if (!session || !session.user) {
     redirect("/auth");
   }
@@ -202,7 +198,8 @@ export async function CreateCategoryAction(prevState: ReturnState, formData: For
   revalidatePath(`/product/create-catalog`)
 
   return {
-    success: true
+    success: true,
+    message: "Berhasil menambahkan kategori"
   }
 }
 
