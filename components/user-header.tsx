@@ -4,7 +4,13 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Button } from "./ui/button";
-import { Drawer, DrawerContent, DrawerTrigger, DrawerDescription, DrawerTitle } from "./ui/drawer";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger,
+  DrawerDescription,
+  DrawerTitle,
+} from "./ui/drawer";
 import NavDropDown from "./ui/navDropDown";
 import { GripVertical } from "lucide-react";
 
@@ -106,6 +112,15 @@ function Navigation({
           ]}
           onItemClick={onCloseDrawer}
         />
+        <Link
+          href="/pembukuan"
+          className={
+            pathname === "/pembukuan" ? "undeline font-bold" : undefined
+          }
+          onClick={onCloseDrawer}
+        >
+          Pembukuan
+        </Link>
       </ul>
     </>
   );
@@ -144,8 +159,8 @@ function AuthNav({
 
 function usePageTitle() {
   const pathname = usePathname();
-  
-  if (pathname === "/beranda") return "Beranda"
+
+  if (pathname === "/beranda") return "Beranda";
   if (pathname.startsWith("/catalog")) return "Catalog";
   if (pathname.startsWith("/product")) return "Produk";
   if (pathname.startsWith("/profile")) return "Profil";

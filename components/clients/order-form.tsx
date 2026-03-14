@@ -28,20 +28,21 @@ const initialState: OrderState = {
 };
 
 export default function OrderForm({ slug, mode }: Props) {
-  const formRef = useRef<HTMLFormElement>(null)
+  const formRef = useRef<HTMLFormElement>(null);
   const { items, getTotal, clearCart } = useCartStore();
 
   const createOrderWithSlug = CreateNewOrder.bind(null, slug);
   const addOrderWithSlug = AddOrderAction.bind(null, slug);
-  const action =
-    mode == "client" ? createOrderWithSlug : addOrderWithSlug;
+  const action = mode == "client" ? createOrderWithSlug : addOrderWithSlug;
   const [state, formAction, isPending] = useActionState(action, initialState);
 
   useEffect(() => {
-    if (state.success && state.waUrl) {
+    if (state.success) {
       clearCart();
-      formRef.current?.reset()
-      window.location.href = state.waUrl;
+      formRef.current?.reset();
+      if (state.waUrl) {
+        window.location.href = state.waUrl;
+      }
     }
   }, [state.success, state.waUrl, clearCart]);
 
@@ -174,7 +175,7 @@ export default function OrderForm({ slug, mode }: Props) {
                 ? "Ordering..."
                 : mode === "user"
                 ? "Checkout"
-                : "Konfirmasi Pesanan"}
+                : "Simpan Order"}
             </button>
             {!state.success && (
               <p className="text-sm text-red-500 font-semibold text-center">

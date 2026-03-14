@@ -23,11 +23,11 @@ export default function ProtectedLayout({
 
   if (!session?.user) return null
 
-  return (
-    <div>
+  return (<>
+    <div className="font-dm_Sans min-h-[97.7vh]">
       <UserHeader />
       {children}
-      <Footer />
     </div>
-  );
+    <Footer />
+  </>);
 }

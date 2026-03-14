@@ -364,35 +364,9 @@ export async function AddOrderAction(
       }
     });
 
-    const message = `
-    Pesanan ${parsed.data.name}
-
-    ${parsed.data.address && `Alamat: ${parsed.data.address ?? "-"}`}
-  ${
-    parsed.data.bookingDate &&
-    `Tanggal Pengambilan/pengiriman: ${DateFormat(parsed.data.bookingDate)}`
-  }
-  ${parsed.data.notes && `Catatan: ${parsed.data.notes}`}
-  total: ${RupiahFormat(totalAmount)}
-
-    Item Pesanan:
-    ${orderItemData
-      .map((item, index) => {
-        const product = productMap.get(item.productId);
-        return `${index + 1}. ${product?.name} x ${item.quantity}`;
-      })
-      .join("\n")}
-    `;
-
-    const encodedMessage = encodeURIComponent(message);
-    const customerWhatsAppNumber = normalizeWhatsappNumber(customerPhone);
-
-    const waUrl = `https://wa.me/${customerWhatsAppNumber}?text=${encodedMessage}`;
-
     return {
       success: true,
-      message: "Mengirim konfirmasi ke pembeli",
-      waUrl,
+      message: "Berhasil Menyimpan",
     };
   } catch (error) {
     console.error("Something went wrong", error);
