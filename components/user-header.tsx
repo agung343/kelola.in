@@ -106,6 +106,13 @@ function Navigation({
           ]}
           onItemClick={onCloseDrawer}
         />
+        <Link
+          href="/expenses"
+          className={pathname === "/expenses" ? "underline font-bold" : undefined}
+          onClick={onCloseDrawer}
+        >
+          Pengeluaran
+        </Link>
       </ul>
     </>
   );
