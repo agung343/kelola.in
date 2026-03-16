@@ -14,14 +14,14 @@ export default function ProtectedLayout({
   const { data: session, isPending } = useSession();
 
   useEffect(() => {
-   if (!isPending && !session?.user) {
-    router.replace("/")
-   }
+    if (!isPending && !session?.user) {
+      router.replace("/");
+    }
   }, [session, isPending, router]);
 
-  if (isPending) return null
+  if (isPending) return null;
 
-  if (!session?.user) return null
+  if (!session?.user) return null;
 
   return (<>
     <div className="font-dm_Sans min-h-[97.7vh]">
@@ -30,4 +30,5 @@ export default function ProtectedLayout({
     </div>
     <Footer />
   </>);
+
 }

@@ -113,13 +113,11 @@ function Navigation({
           onItemClick={onCloseDrawer}
         />
         <Link
-          href="/pembukuan"
-          className={
-            pathname === "/pembukuan" ? "undeline font-bold" : undefined
-          }
+          href="/expenses"
+          className={pathname === "/expenses" ? "underline font-bold" : undefined}
           onClick={onCloseDrawer}
         >
-          Pembukuan
+          Pengeluaran
         </Link>
       </ul>
     </>
