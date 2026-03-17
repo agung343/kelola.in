@@ -64,7 +64,6 @@ Business owner can log and monitor operational cost to stay top of their financi
 ## TechStack
 
 | Layer | Techonology |
-
 | --- | --- |
 | Framework | [Next.js](https://nextjs.org/) |
 | DatabaseORM | [Prisma](https://prisma.io/) |
